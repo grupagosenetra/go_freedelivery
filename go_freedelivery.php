@@ -166,7 +166,10 @@ class go_freedelivery extends Module
         $categories = unserialize(Configuration::get('GO_FREE_DELIVERY_CATEGORIES'), ['allowed_classes' => false]);
 
         $result = $this->getProductToFreeDelivery($idShop, $idLang, $categories);
-
+        
+        if (empty($result)) {
+            $this->context->smarty->assign(['viewProductToFree' => 0]);
+        }
 
             return $this->display(__FILE__, 'views/templates/hook/cart.tpl');
     }
