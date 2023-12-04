@@ -15,7 +15,7 @@ Key features:
 - Product carousel allowing to reach threshold easily
 ## Requirements
 - PrestaShop 1.7+
-- PHP 7.4+
+- PHP 7.2+
 
 ## Installation
 1. Download and unzip the module.

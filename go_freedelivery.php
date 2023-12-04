@@ -19,7 +19,7 @@ class go_freedelivery extends Module
      * Configuration errors
      *
      */
-    private array $configurationErrors = [];
+    private $configurationErrors = [];
 
     /**
      * Constructs a new instance of the class.
@@ -59,7 +59,6 @@ class go_freedelivery extends Module
         Configuration::updateValue('GO_FREE_DELIVERY_CATEGORIES', '');
 
 
-
         return true;
 
     }
@@ -67,16 +66,13 @@ class go_freedelivery extends Module
     /**
      * Module uninstallation
      */
-    public function uninstall(): bool
+    public function uninstall()
     {
         return parent::uninstall();
     }
 
-    /**
-     * Configuration page in admin panel
-     * @throws Exception
-     */
-    public function getContent(): string
+
+    public function getContent()
     {
         if (Tools::isSubmit('submitForm')) {
             $this->processForm();
@@ -87,11 +83,7 @@ class go_freedelivery extends Module
     }
 
 
-    /**
-     * Display configuration form
-     * @throws Exception
-     */
-    private function displayForm(): string
+    private function displayForm()
     {
 
 
@@ -106,12 +98,8 @@ class go_freedelivery extends Module
 
     }
 
-    /**
-     * Generates the function comment for the getConfigForm() method.
-     *
-     * @return string The generated form.
-     */
-    protected function getConfigForm(): string
+
+    protected function getConfigForm()
     {
         $form = [
             'form' => [
@@ -166,12 +154,12 @@ class go_freedelivery extends Module
         $categories = unserialize(Configuration::get('GO_FREE_DELIVERY_CATEGORIES'), ['allowed_classes' => false]);
 
         $result = $this->getProductToFreeDelivery($idShop, $idLang, $categories);
-        
+
         if (empty($result)) {
             $this->context->smarty->assign(['viewProductToFree' => 0]);
         }
 
-            return $this->display(__FILE__, 'views/templates/hook/cart.tpl');
+        return $this->display(__FILE__, 'views/templates/hook/cart.tpl');
     }
 
     public function hookActionFrontControllerSetMedia($params)
@@ -241,13 +229,8 @@ class go_freedelivery extends Module
         }
     }
 
-    /**
-     * Parses the given value into an array of categories.
-     *
-     * @param string $getValue The value to be parsed.
-     * @return string The serialized array of categories.
-     */
-    private function parseCategories(string $getValue): string
+
+    private function parseCategories($getValue)
     {
         if (empty($getValue)) {
             return '';
@@ -258,27 +241,16 @@ class go_freedelivery extends Module
         return serialize($categories);
     }
 
-    /**
-     * Retrieves the name of the product category.
-     *
-     * @param int $category The ID of the category.
-     * @return string The name of the product category.
-     * @throws Exception If the category does not exist.
-     */
-    private function getProductCategoryName(int $category): string
+
+    private function getProductCategoryName($category)
     {
         $category = new Category($category);
 
         return $category->getName();
     }
 
-    /**
-     * Converts an array to a string by concatenating its elements with a comma separator.
-     *
-     * @param mixed $getValue The value to be converted. It can be an array or any other datatype.
-     * @return string The converted string value.
-     */
-    private function arrayToString($getValue): string
+
+    private function arrayToString($getValue)
     {
         if (is_array($getValue)) {
             return implode(',', $getValue);
@@ -290,7 +262,7 @@ class go_freedelivery extends Module
     /**
      * Process configuration form
      */
-    public function processForm(): void
+    public function processForm()
     {
         $this->validateMinOrderValue(Tools::getValue('min_order_value'));
         Configuration::updateValue('GO_FREE_DELIVERY_MIN_VALUE', Tools::getValue('min_order_value'));
@@ -299,11 +271,8 @@ class go_freedelivery extends Module
         Configuration::updateValue('GO_FREE_DELIVERY_CATEGORIES', $categories);
     }
 
-    /**
-     * @return array
-     * @throws Exception
-     */
-    public function getCategoriesNames(): array
+
+    public function getCategoriesNames()
     {
         $categories = unserialize(Configuration::get('GO_FREE_DELIVERY_CATEGORIES'), ['allowed_classes' => false]);
 
@@ -319,21 +288,16 @@ class go_freedelivery extends Module
         return $categoriesNames;
     }
 
-    /**
-     * @return float
-     */
-    public function getFreeDeliveryThreshold($total): float
+
+    public function getFreeDeliveryThreshold($total)
     {
 
         $orderTotalThreshold = Configuration::get('GO_FREE_DELIVERY_MIN_VALUE');
         return $orderTotalThreshold - $total;
     }
 
-    /**
-     * @param $categories
-     * @return string
-     */
-    public function getCategoryCondition($categories): string
+
+    public function getCategoryCondition($categories)
     {
         $categoryCondition = '';
         if (!empty($categories) && is_array($categories)) {
@@ -343,16 +307,8 @@ class go_freedelivery extends Module
         return $categoryCondition;
     }
 
-    /**
-     * @param int $idShop
-     * @param int $idLang
-     * @param $idShopGroup
-     * @param float $toFree
-     * @param string $categoryCondition
-     * @param int $productsLimit
-     * @return array|bool
-     */
-    public function queryExecution(int $idShop, int $idLang, $idShopGroup, float $toFree, string $categoryCondition, int $productsLimit)
+
+    public function queryExecution($idShop, $idLang, $idShopGroup, $toFree, $categoryCondition, $productsLimit)
     {
         $sql = 'SELECT p.*, product_shop.*, stock.out_of_stock, IFNULL(stock.quantity, 0) as quantity, pl.`description`, pl.`description_short`, pl.`link_rewrite`, pl.`meta_description`, pl.`meta_keywords`,
             pl.`meta_title`, pl.`name`, pl.`available_now`, pl.`available_later`, image.`id_image` id_image, image.`id_image` as id_image2, il.`legend`, m.`name` AS manufacturer_name
