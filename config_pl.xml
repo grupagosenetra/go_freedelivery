@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<module>
+    <name>go_freedelivery</name>
+    <displayName><![CDATA[Karuzela do darmowej dostawy]]></displayName>
+    <version><![CDATA[1.0.0]]></version>
+    <description><![CDATA[Karuzela do darmowej dostawy]]></description>
+    <author><![CDATA[GoGroup]]></author>
+    <tab><![CDATA[shipping_logistics]]></tab>
+	<confirmUninstall><![CDATA[Czy chcesz odinstalować]]></confirmUninstall>
+    <is_configurable>1</is_configurable>
+    <need_instance>0</need_instance>
+</module>

@@ -214,6 +214,8 @@ class go_freedelivery extends Module
 
 
             $res = array();
+            $this->isProductOnDiscount($result, $toFree);
+
             foreach ($result as $item) {
                 $res[$item['id_product']] = $item;
             }
@@ -323,7 +325,37 @@ class go_freedelivery extends Module
             WHERE p.active = 1 AND ((p.price * 1.23) > ' . (float)$toFree . ' ' . $categoryCondition . ')
             ORDER BY p.price ASC LIMIT ' . (int)$productsLimit;
         $result = Db::getInstance()->executeS($sql);
+
         return $result;
+    }
+
+    private function isProductOnDiscount(&$item, $freeDeliveryPrice)
+    {
+        foreach ($item as $key => &$product) {
+            if (Product::isDiscounted((int)$product['id_product']) &&
+                $this->priceIsNotEnoughForFreeDelivery($product, $freeDeliveryPrice)
+            ) {
+                unset($item[$key]);
+            }
+        }
+
+    }
+
+    private function priceIsNotEnoughForFreeDelivery($product)
+    {
+        $cartSum = $this->context->cart->getOrderTotal(true, Cart::ONLY_PRODUCTS_WITHOUT_SHIPPING);
+
+        $expectedPrice = floatval(Configuration::get('GO_FREE_DELIVERY_MIN_VALUE'));
+        $expectedPrice = round($expectedPrice, 2);
+        $calculatedPrice = round($cartSum + $product['price'], 2);
+
+
+        if ($expectedPrice >= $calculatedPrice) {
+            return false;
+
+        } else {
+            return true;
+        }
     }
 
 }
