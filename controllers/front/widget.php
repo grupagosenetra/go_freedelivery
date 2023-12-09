@@ -1,6 +1,6 @@
 <?php
 
-class Go_freedeliveryWidgetModuleFrontController extends ModuleFrontController
+class go_freedeliveryWidgetModuleFrontController extends ModuleFrontController
 {
     public function initContent()
     {
